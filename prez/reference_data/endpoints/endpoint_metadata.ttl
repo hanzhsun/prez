@@ -51,12 +51,12 @@ ogce:collection-object
 
 ogce:item-listing
     a ont:ListingEndpoint ;
-    ont:relevantShapes ex:Feature , ex:ConceptSchemeConcept , ex:CollectionConcept , ex:Resource ;
+    ont:relevantShapes ex:Feature ;
 .
 
 ogce:item-object
     a ont:ObjectEndpoint ;
-    ont:relevantShapes ex:Feature , ex:ConceptSchemeConcept , ex:CollectionConcept , ex:Resource ;
+    ont:relevantShapes ex:Feature ;
 .
 
 ogce:cql-queryables

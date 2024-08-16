@@ -249,6 +249,8 @@ class NegotiatedPMTs(BaseModel):
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
             PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
             PREFIX sh: <http://www.w3.org/ns/shacl#>
+            PREFIX tern: <https://w3id.org/tern/ontologies/tern/>
+
         
             SELECT ?profile ?title ?class (count(?mid) as ?distance) ?req_profile ?def_profile ?format ?req_format ?def_format
         
@@ -257,7 +259,7 @@ class NegotiatedPMTs(BaseModel):
               ?class rdfs:subClassOf* ?mid .
               ?mid rdfs:subClassOf* ?base_class .
               VALUES ?base_class {{ dcat:Dataset geo:FeatureCollection geo:Feature
-              skos:ConceptScheme skos:Concept skos:Collection 
+              skos:ConceptScheme skos:Concept skos:Collection tern:RDFDataset tern:ObservationCollection tern:FeatureOfInterest tern:Observation
               dcat:Catalog rdf:Resource dcat:Resource prof:Profile prez:SPARQLQuery 
               prez:SearchResult prez:CQLObjectList prez:QueryablesList prez:Object rdfs:Resource }}
               ?profile altr-ext:constrainsClass ?class ;

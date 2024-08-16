@@ -12,75 +12,40 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix altr-ext: <http://www.w3.org/ns/dx/connegp/altr-ext#> .
 
+@prefix tern: <https://w3id.org/tern/ontologies/tern/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
 ex:Catalogs
     a sh:NodeShape ;
     ont:hierarchyLevel 1 ;
-    sh:targetClass dcat:Catalog ;
+    sh:targetClass tern:RDFDataset ;
     sh:property [
-        sh:path dcterms:hasPart ;
-        sh:or (
-            [ sh:class dcat:Resource ]
-            [ sh:class geo:FeatureCollection ]
-            [ sh:class skos:ConceptScheme ]
-            [ sh:class skos:Collection ]
-        ) ;
-    ] .
+        sh:path [
+                    sh:inversePath void:inDataset ] ;
+                    sh:class tern:ObservationCollection , tern:FeatureOfInterest ;
+    ] ;
+.
 
 ex:Collections
     a sh:NodeShape ;
     ont:hierarchyLevel 2 ;
-    sh:targetClass geo:FeatureCollection , skos:ConceptScheme , skos:Collection , dcat:Resource ;
+    sh:targetClass tern:ObservationCollection , tern:FeatureOfInterest ;
     sh:property [
-        sh:path [ sh:inversePath dcterms:hasPart ] ;
-        sh:class dcat:Catalog ;
+        sh:path void:inDataset ;
+        sh:class tern:RDFDataset ;
     ] .
 
 ex:Feature
     a sh:NodeShape ;
     ont:hierarchyLevel 3 ;
-    sh:targetClass geo:Feature ;
+    sh:targetClass tern:Observation ;
     sh:property [
-        sh:path [ sh:inversePath rdfs:member ] ;
-        sh:class geo:FeatureCollection ;
+        sh:path [ sh:inversePath sosa:hasMember ] ;
+        sh:class tern:ObservationCollection ;
     ] , [
-        sh:path ( [sh:inversePath rdfs:member ] [ sh:inversePath dcterms:hasPart ] );
-        sh:class dcat:Catalog ;
-    ] .
-
-ex:ConceptSchemeConcept
-    a sh:NodeShape ;
-    ont:hierarchyLevel 3 ;
-    sh:targetClass skos:Concept ;
-    sh:property [
-        sh:path skos:inScheme ;
-        sh:class skos:ConceptScheme ;
-    ] , [
-        sh:path ( skos:inScheme [ sh:inversePath dcterms:hasPart ] );
-        sh:class dcat:Catalog ;
-    ] .
-
-ex:CollectionConcept
-    a sh:NodeShape ;
-    ont:hierarchyLevel 3 ;
-    sh:targetClass skos:Concept ;
-    sh:property [
-        sh:path [ sh:inversePath skos:member ] ;
-        sh:class skos:Collection ;
-    ] , [
-        sh:path ( [ sh:inversePath skos:member ] [ sh:inversePath dcterms:hasPart ] );
-        sh:class dcat:Catalog ;
-    ] .
-
-ex:Resource
-    a sh:NodeShape ;
-    ont:hierarchyLevel 3 ;
-    sh:targetClass rdf:Resource ;
-    sh:property [
-        sh:path [ sh:inversePath dcterms:hasPart ] ;
-        sh:class dcat:Resource ;
-    ] , [
-        sh:path ( [ sh:inversePath dcterms:hasPart ] [ sh:inversePath dcterms:hasPart ] );
-        sh:class dcat:Catalog ;
+        sh:path ( [ sh:inversePath sosa:hasMember ] void:inDataset );
+        sh:class tern:RDFDataset ;
     ] .
 
 ex:Profiles

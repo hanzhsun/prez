@@ -48,14 +48,14 @@ class PyoxigraphRepo(Repo):
         return g.parse(data=ntriples, format="ntriples")
 
     def _sync_rdf_query_to_graph(self, query: str) -> Graph:
-        results = self.pyoxi_store.query(query)
+        results = self.pyoxi_store.query(query, use_default_graph_as_union=True)
         result_graph = self._handle_query_triples_results(results)
         return result_graph
 
     def _sync_tabular_query_to_table(self, query: str, context: URIRef = None) -> tuple:
-        results = self.pyoxi_store.query(query)
+        named_graphs = list(self.pyoxi_store.named_graphs())
+        results = self.pyoxi_store.query(query, default_graph=named_graphs)
         results_dict = self._handle_query_solution_results(results)
-        # only return the bindings from the results.
         return context, results_dict["results"]["bindings"]
 
     def _sparql(self, query: str) -> dict | Graph | bool:

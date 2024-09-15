@@ -258,6 +258,7 @@ class NegotiatedPMTs(BaseModel):
             SELECT ?profile ?title ?class (count(?mid) as ?distance) ?req_profile ?def_profile ?format ?req_format ?def_format
         
             WHERE {{
+            GRAPH ?g {{
               VALUES ?class {{{" ".join('<' + str(klass) + '>' for klass in self.classes)}}}
               ?class rdfs:subClassOf* ?mid .
               ?mid rdfs:subClassOf* ?base_class .
@@ -274,6 +275,7 @@ class NegotiatedPMTs(BaseModel):
                                    altr-ext:hasDefaultProfile ?profile }} AS ?def_profile)
               {self._generate_mediatype_if_statements()}
               BIND(EXISTS {{ ?profile altr-ext:hasDefaultResourceFormat ?format }} AS ?def_format)
+              }}
             }}
             GROUP BY ?class ?profile ?req_profile ?def_profile ?format ?req_format ?def_format ?title
             ORDER BY DESC(?req_profile) DESC(?distance) DESC(?def_profile) DESC(?req_format) DESC(?def_format)

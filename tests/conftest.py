@@ -1,5 +1,6 @@
 import os
 
+from pyoxigraph import NamedNode
 from rdflib import Graph, URIRef, RDF
 from rdflib.namespace import GEO
 from starlette.routing import Mount
@@ -28,7 +29,9 @@ def test_store() -> Store:
     store = Store()
 
     for file in Path(__file__).parent.glob("../test_data/*.ttl"):
-        store.load(file.read_bytes(), "text/turtle")
+        store.load(
+            file.read_bytes(), "text/turtle", to_graph=NamedNode(f"https://{file.stem}")
+        )
 
     return store
 

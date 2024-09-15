@@ -34,6 +34,7 @@ from prez.routers.management import router as management_router
 from prez.routers.ogc_router import router as ogc_records_router
 from prez.routers.ogc_features_router import features_subapi
 from prez.routers.sparql import router as sparql_router
+from prez.routers.configuration import router as configuration_router
 from prez.services.app_service import (
     healthcheck_sparql_endpoints,
     count_objects,
@@ -173,6 +174,8 @@ def assemble_app(
 
     app.include_router(management_router)
     app.include_router(ogc_records_router)
+    if settings.configuration_mode:
+        app.include_router(configuration_router)
     if _settings.enable_sparql_endpoint:
         app.include_router(sparql_router)
     app.mount(

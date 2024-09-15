@@ -3,8 +3,8 @@ from pathlib import Path
 
 import httpx
 from fastapi import Depends, Request, HTTPException
-from pyoxigraph import Store
-from rdflib import Dataset, URIRef, Graph, SKOS, RDF
+from pyoxigraph import Store, NamedNode
+from rdflib import Dataset, URIRef, Graph, SKOS, RDF, PROF
 from sparql_grammar_pydantic import IRI, Var
 
 from prez.cache import (
@@ -114,12 +114,20 @@ async def load_system_data_to_oxigraph(store: Store):
     """
     # TODO refactor to use the local files directly
     for f in (Path(__file__).parent / "reference_data/profiles").glob("*.ttl"):
-        prof_bytes = Graph().parse(f).serialize(format="nt", encoding="utf-8")
+        prof_g = Graph().parse(f)
+        prof_uri = prof_g.value(None, RDF.type, PROF.Profile)
+        prof_bytes = prof_g.serialize(format="nt", encoding="utf-8")
         # profiles_bytes = profiles_graph_cache.default_context.serialize(format="nt", encoding="utf-8")
-        store.load(prof_bytes, "application/n-triples")
+        store.load(
+            prof_bytes, "application/n-triples", to_graph=NamedNode(str(prof_uri))
+        )
 
     endpoints_bytes = endpoints_graph_cache.serialize(format="nt", encoding="utf-8")
-    store.load(endpoints_bytes, "application/n-triples")
+    store.load(
+        endpoints_bytes,
+        "application/n-triples",
+        to_graph=NamedNode(str(ONT["endpoints"])),
+    )
 
 
 async def load_annotations_data_to_oxigraph(store: Store):
@@ -130,7 +138,9 @@ async def load_annotations_data_to_oxigraph(store: Store):
     for file in (Path(__file__).parent / "reference_data/annotations").glob("*"):
         g.parse(file)
     file_bytes = g.serialize(format="nt", encoding="utf-8")
-    store.load(file_bytes, "application/n-triples")
+    store.load(
+        file_bytes, "application/n-triples", to_graph=NamedNode(str(ONT["annotations"]))
+    )
 
 
 async def cql_post_parser_dependency(request: Request) -> CQLParser:

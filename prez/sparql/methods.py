@@ -40,6 +40,12 @@ class Repo(ABC):
             ],
         )
         g = Graph()
+        g.bind("identifiers", "http://id.loc.gov/vocabulary/identifiers/")
+        g.bind("rifcsActivity", "http://purl.org/au-research/vocabulary/RIFCS/RIFCSActivityRelationType/")
+        g.bind("rifcsDescription", "http://purl.org/au-research/vocabulary/RIFCS/RIFCSDescriptionType/")
+        g.bind("rifcsSubject", "http://purl.org/au-research/vocabulary/RIFCS/RIFCSSubjectType/")
+        g.bind("rifcsIdentifier", "http://purl.org/au-research/vocabulary/RIFCS/RIFCSIdentifierType/")
+        g.bind('cebra','https://umelb-pp.poolparty.biz/CEBRA/')
         tabular_results = []
         for result in results:
             if isinstance(result, Graph):

@@ -10,4 +10,3 @@ test_*.py
 .github/
 Dockerfile
 *.Dockerfile
-*.bat
